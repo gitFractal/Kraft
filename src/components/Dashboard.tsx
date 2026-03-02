@@ -390,7 +390,7 @@ export default function Dashboard({ user, onLogout, theme, setTheme, language }:
                 <div className="space-y-2">
                   <label className="text-sm font-medium">{t.type}</label>
                   <select 
-                    className="flex h-10 w-full rounded-xl bg-gray-100 dim:bg-[#3d3d3d] dark:bg-[#242424] px-3 py-2 text-sm text-gray-900 dim:text-gray-100 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
+                    className="flex h-10 w-full rounded-xl bg-gray-100 dim:bg-[#3d3d3d] dark:bg-[#242424] px-3 py-2 text-[16px] md:text-sm text-gray-900 dim:text-gray-100 dark:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
                     value={newTx.type}
                     onChange={(e) => setNewTx({...newTx, type: e.target.value as "income"|"expense"})}
                   >

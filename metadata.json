@@ -1,0 +1,5 @@
+{
+  "name": "BoxyBudget",
+  "description": "A lightweight, browser-based financial and budgeting calculator with a clean, boxy Apple-like aesthetic.",
+  "requestFramePermissions": []
+}

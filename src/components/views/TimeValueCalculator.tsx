@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Calculator } from 'lucide-react';
+import { useCurrency } from '../../lib/CurrencyContext';
 
 export default function TimeValueCalculator() {
+  const { format, displayCurrency } = useCurrency();
   const [initialAmount, setInitialAmount] = useState('10000');
   const [monthlyContribution, setMonthlyContribution] = useState('500');
   const [interestRate, setInterestRate] = useState('7');
@@ -39,11 +41,11 @@ export default function TimeValueCalculator() {
           <form onSubmit={calculateFV} className="space-y-6">
             <div className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Initial Amount ($)</label>
+                <label className="text-sm font-medium">Initial Amount ({displayCurrency})</label>
                 <Input type="number" value={initialAmount} onChange={e => setInitialAmount(e.target.value)} required />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Monthly Contribution ($)</label>
+                <label className="text-sm font-medium">Monthly Contribution ({displayCurrency})</label>
                 <Input type="number" value={monthlyContribution} onChange={e => setMonthlyContribution(e.target.value)} required />
               </div>
               <div className="space-y-2">
@@ -65,10 +67,10 @@ export default function TimeValueCalculator() {
             <div className="mt-8 p-6 rounded-xl bg-blue-50 dim:bg-blue-900/20 dark:bg-blue-900/20 border border-blue-100 dim:border-blue-800 dark:border-blue-800 text-center">
               <h3 className="text-sm font-medium text-blue-800 dim:text-blue-300 dark:text-blue-300 mb-2">Estimated Future Value</h3>
               <div className="text-4xl font-bold text-blue-900 dim:text-blue-100 dark:text-blue-100">
-                ${futureValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                {format(futureValue, displayCurrency)}
               </div>
               <p className="text-sm text-blue-600 dim:text-blue-400 dark:text-blue-400 mt-2">
-                Total Contributions: ${(parseFloat(initialAmount) + (parseFloat(monthlyContribution) * parseFloat(years) * 12)).toLocaleString()}
+                Total Contributions: {format(parseFloat(initialAmount) + (parseFloat(monthlyContribution) * parseFloat(years) * 12), displayCurrency)}
               </p>
             </div>
           )}

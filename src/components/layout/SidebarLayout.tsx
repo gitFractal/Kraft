@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Menu, X, LayoutDashboard, TrendingUp, TrendingDown, Landmark, Calculator, Clock, Heart, LogOut, Moon, Sun, Monitor } from 'lucide-react';
 import { Theme } from '../../App';
 import { Language } from '../../lib/i18n';
+import { useCurrency, CURRENCIES, Currency } from '../../lib/CurrencyContext';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -26,19 +27,20 @@ export const TABS = [
 
 export default function SidebarLayout({ children, activeTab, setActiveTab, user, onLogout, theme, setTheme, language }: SidebarLayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { displayCurrency, setDisplayCurrency } = useCurrency();
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 dim:bg-[#1e1e1e] dark:bg-[#0a0a0a]">
       {/* Mobile sidebar backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-20 bg-black/50 lg:hidden" 
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden" 
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white dim:bg-[#2d2d2d] dark:bg-[#141414] border-r border-gray-200 dim:border-gray-800 dark:border-gray-800 transition-transform duration-300 lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-white dim:bg-[#2d2d2d] dark:bg-[#141414] border-r border-gray-200 dim:border-gray-800 dark:border-gray-800 transition-transform duration-300 lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dim:border-gray-800 dark:border-gray-800">
             <span className="text-xl font-bold text-gray-900 dim:text-white dark:text-white">Kraft</span>
@@ -71,13 +73,26 @@ export default function SidebarLayout({ children, activeTab, setActiveTab, user,
             })}
           </nav>
 
-          <div className="border-t border-gray-200 dim:border-gray-800 dark:border-gray-800 p-4">
-            <div className="flex items-center justify-between mb-4">
+          <div className="border-t border-gray-200 dim:border-gray-800 dark:border-gray-800 p-4 space-y-4">
+            <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dim:text-gray-300 dark:text-gray-300 truncate">{user}</span>
               <button onClick={onLogout} className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400" title="Logout">
                 <LogOut className="h-5 w-5" />
               </button>
             </div>
+            
+            <div className="flex justify-between bg-gray-100 dim:bg-[#1e1e1e] dark:bg-black rounded-lg p-1">
+              <select 
+                value={displayCurrency} 
+                onChange={(e) => setDisplayCurrency(e.target.value as Currency)}
+                className="w-full bg-transparent text-sm font-medium text-gray-700 dim:text-gray-300 dark:text-gray-300 focus:outline-none py-1 px-2"
+              >
+                {CURRENCIES.map(c => (
+                  <option key={c} value={c} className="text-gray-900">{c}</option>
+                ))}
+              </select>
+            </div>
+
             <div className="flex justify-between bg-gray-100 dim:bg-[#1e1e1e] dark:bg-black rounded-lg p-1">
               <button onClick={() => setTheme('light')} className={`p-1.5 rounded-md ${theme === 'light' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500'}`}><Sun className="h-4 w-4" /></button>
               <button onClick={() => setTheme('dim')} className={`p-1.5 rounded-md ${theme === 'dim' ? 'bg-[#2d2d2d] shadow-sm text-blue-400' : 'text-gray-500'}`}><Monitor className="h-4 w-4" /></button>
@@ -88,7 +103,7 @@ export default function SidebarLayout({ children, activeTab, setActiveTab, user,
       </aside>
 
       {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden w-full">
         <header className="flex h-16 items-center justify-between border-b border-gray-200 dim:border-gray-800 dark:border-gray-800 bg-white dim:bg-[#2d2d2d] dark:bg-[#141414] px-4 lg:px-8">
           <button onClick={() => setIsOpen(true)} className="lg:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
             <Menu className="h-6 w-6" />

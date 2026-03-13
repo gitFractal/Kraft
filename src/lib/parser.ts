@@ -100,7 +100,7 @@ function processRows(rows: any[], sourceName: string): Transaction[] {
         description,
         amount: Math.abs(amount),
         category,
-        type: amount >= 0 ? "income" : "expense",
+        type: (amount >= 0 ? "income" : "expense") as "income" | "expense",
       };
     })
     .filter((tx) => tx.amount !== 0); // Filter out empty or invalid rows

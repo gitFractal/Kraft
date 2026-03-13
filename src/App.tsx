@@ -14,14 +14,45 @@ import TimeValueCalculator from "./components/views/TimeValueCalculator";
 import RealWageEstimator from "./components/views/RealWageEstimator";
 import GratitudeJournal from "./components/views/GratitudeJournal";
 import { Language } from "./lib/i18n";
+import { CurrencyProvider } from "./lib/CurrencyContext";
 
 export type Theme = "light" | "dim" | "dark";
+
+function MainApp({ user, onLogout, theme, setTheme, language }: any) {
+  const [activeTab, setActiveTab] = useState("dashboard");
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard': return <DashboardView />;
+      case 'income': return <IncomeTracker />;
+      case 'expenses': return <ExpensesTracker />;
+      case 'networth': return <NetWorthTracker />;
+      case 'timevalue': return <TimeValueCalculator />;
+      case 'realwage': return <RealWageEstimator />;
+      case 'gratitude': return <GratitudeJournal />;
+      default: return <DashboardView />;
+    }
+  };
+
+  return (
+    <SidebarLayout 
+      activeTab={activeTab} 
+      setActiveTab={setActiveTab} 
+      user={user} 
+      onLogout={onLogout} 
+      theme={theme} 
+      setTheme={setTheme} 
+      language={language}
+    >
+      {renderContent()}
+    </SidebarLayout>
+  );
+}
 
 export default function App() {
   const [user, setUser] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>("light");
   const [language, setLanguage] = useState<Language>("EN");
-  const [activeTab, setActiveTab] = useState("dashboard");
 
   useEffect(() => {
     const savedLang = localStorage.getItem("boxybudget_lang") as Language;
@@ -72,30 +103,15 @@ export default function App() {
     return <Auth onLogin={handleLogin} language={language} setLanguage={handleLanguageChange} />;
   }
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'dashboard': return <DashboardView />;
-      case 'income': return <IncomeTracker />;
-      case 'expenses': return <ExpensesTracker />;
-      case 'networth': return <NetWorthTracker />;
-      case 'timevalue': return <TimeValueCalculator />;
-      case 'realwage': return <RealWageEstimator />;
-      case 'gratitude': return <GratitudeJournal />;
-      default: return <DashboardView />;
-    }
-  };
-
   return (
-    <SidebarLayout 
-      activeTab={activeTab} 
-      setActiveTab={setActiveTab} 
-      user={user} 
-      onLogout={handleLogout} 
-      theme={theme} 
-      setTheme={setTheme} 
-      language={language}
-    >
-      {renderContent()}
-    </SidebarLayout>
+    <CurrencyProvider user={user}>
+      <MainApp 
+        user={user} 
+        onLogout={handleLogout} 
+        theme={theme} 
+        setTheme={setTheme} 
+        language={language} 
+      />
+    </CurrencyProvider>
   );
 }

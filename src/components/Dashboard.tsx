@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Upload, FileSpreadsheet, Trash2, TrendingUp, TrendingDown, DollarSign, PieChart as PieChartIcon, BarChart3, Moon, Sun, Loader2, AlertCircle, Plus, LogOut, Monitor } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/Card";
 import { Button } from "./ui/Button";
@@ -28,8 +28,8 @@ const CURRENCIES = ["USD", "EUR", "CZK", "UAH"];
 interface DashboardProps {
   user: string;
   onLogout: () => void;
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  theme: "light" | "dim" | "dark";
+  setTheme: (theme: "light" | "dim" | "dark") => void;
   language: Language;
 }
 
@@ -337,7 +337,7 @@ export default function Dashboard({ user, onLogout, theme, setTheme, language }:
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={Object.entries(summary.expensesByCategory).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value).slice(0, 8)}
+                      data={Object.entries(summary.expensesByCategory).map(([name, value]) => ({ name, value: value as number })).sort((a, b) => b.value - a.value).slice(0, 8)}
                       cx="50%"
                       cy="50%"
                       innerRadius={60}

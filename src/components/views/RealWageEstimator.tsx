@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Clock } from 'lucide-react';
+import { useCurrency } from '../../lib/CurrencyContext';
 
 export default function RealWageEstimator() {
+  const { format, displayCurrency } = useCurrency();
   const [hourlyWage, setHourlyWage] = useState('25');
   const [hoursWorked, setHoursWorked] = useState('40');
   const [commuteHours, setCommuteHours] = useState('5');
@@ -40,7 +42,7 @@ export default function RealWageEstimator() {
           <form onSubmit={calculateRealWage} className="space-y-6">
             <div className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Official Hourly Wage ($)</label>
+                <label className="text-sm font-medium">Official Hourly Wage ({displayCurrency})</label>
                 <Input type="number" step="0.5" value={hourlyWage} onChange={e => setHourlyWage(e.target.value)} required />
               </div>
               <div className="space-y-2">
@@ -56,7 +58,7 @@ export default function RealWageEstimator() {
                 <Input type="number" step="0.5" value={prepHours} onChange={e => setPrepHours(e.target.value)} required />
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <label className="text-sm font-medium">Work-Related Expenses ($/Week)</label>
+                <label className="text-sm font-medium">Work-Related Expenses ({displayCurrency}/Week)</label>
                 <p className="text-xs text-gray-500 mb-2">Gas, transit, work clothes, bought lunches, etc.</p>
                 <Input type="number" value={workExpenses} onChange={e => setWorkExpenses(e.target.value)} required />
               </div>
@@ -71,10 +73,10 @@ export default function RealWageEstimator() {
             <div className="mt-8 p-6 rounded-xl bg-emerald-50 dim:bg-emerald-900/20 dark:bg-emerald-900/20 border border-emerald-100 dim:border-emerald-800 dark:border-emerald-800 text-center">
               <h3 className="text-sm font-medium text-emerald-800 dim:text-emerald-300 dark:text-emerald-300 mb-2">Your True Hourly Wage</h3>
               <div className="text-4xl font-bold text-emerald-900 dim:text-emerald-100 dark:text-emerald-100">
-                ${realWage.toFixed(2)} / hr
+                {format(realWage, displayCurrency)} / hr
               </div>
               <p className="text-sm text-emerald-600 dim:text-emerald-400 dark:text-emerald-400 mt-2">
-                Compared to official ${parseFloat(hourlyWage).toFixed(2)} / hr
+                Compared to official {format(parseFloat(hourlyWage), displayCurrency)} / hr
               </p>
             </div>
           )}

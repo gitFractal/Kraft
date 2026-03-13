@@ -4,8 +4,15 @@
  */
 
 import { useState, useEffect } from "react";
-import Dashboard from "./components/Dashboard";
 import Auth from "./components/Auth";
+import SidebarLayout from "./components/layout/SidebarLayout";
+import DashboardView from "./components/views/DashboardView";
+import IncomeTracker from "./components/views/IncomeTracker";
+import ExpensesTracker from "./components/views/ExpensesTracker";
+import NetWorthTracker from "./components/views/NetWorthTracker";
+import TimeValueCalculator from "./components/views/TimeValueCalculator";
+import RealWageEstimator from "./components/views/RealWageEstimator";
+import GratitudeJournal from "./components/views/GratitudeJournal";
 import { Language } from "./lib/i18n";
 
 export type Theme = "light" | "dim" | "dark";
@@ -14,6 +21,7 @@ export default function App() {
   const [user, setUser] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>("light");
   const [language, setLanguage] = useState<Language>("EN");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   useEffect(() => {
     const savedLang = localStorage.getItem("boxybudget_lang") as Language;
@@ -64,9 +72,30 @@ export default function App() {
     return <Auth onLogin={handleLogin} language={language} setLanguage={handleLanguageChange} />;
   }
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard': return <DashboardView />;
+      case 'income': return <IncomeTracker />;
+      case 'expenses': return <ExpensesTracker />;
+      case 'networth': return <NetWorthTracker />;
+      case 'timevalue': return <TimeValueCalculator />;
+      case 'realwage': return <RealWageEstimator />;
+      case 'gratitude': return <GratitudeJournal />;
+      default: return <DashboardView />;
+    }
+  };
+
   return (
-    <div className="min-h-screen transition-colors duration-300">
-      <Dashboard user={user} onLogout={handleLogout} theme={theme} setTheme={setTheme} language={language} />
-    </div>
+    <SidebarLayout 
+      activeTab={activeTab} 
+      setActiveTab={setActiveTab} 
+      user={user} 
+      onLogout={handleLogout} 
+      theme={theme} 
+      setTheme={setTheme} 
+      language={language}
+    >
+      {renderContent()}
+    </SidebarLayout>
   );
 }
